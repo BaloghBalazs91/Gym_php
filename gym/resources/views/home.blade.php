@@ -4,7 +4,7 @@
 
 @section('content')
     <div align="center">
-    <img src="{{ asset('storage/' . 'images/home-picture.jpg') }}" alt="Gym Picture" class="w-75" >
+    <img src="{{ asset('storage/images/home-picture.jpg') }}" alt="Gym Picture" class="w-75" >
     </div>
     <br>
     <h1 align="center">Welcome to our modern and well-equipped gym's website! We are proud to present a platform that caters to all fitness enthusiasts!</h1><br>
