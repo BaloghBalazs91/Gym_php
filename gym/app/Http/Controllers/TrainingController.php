@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Models\Training;
 use App\Models\TrainingMethod;
 use App\Models\User;
+use App\Repositories\TrainingRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -16,43 +17,52 @@ use Illuminate\Support\Facades\Mail;
 
 class TrainingController extends Controller
 {
+
+    public function __construct(protected TrainingRepository $trainingRepository)
+    {}
+
     public function index(Request $request)
     {
-        $week = $request->query('week');
-        Log::info($week);
-
-        if ($week == null)
-        {
-            $trainings = Training::with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
-                $query->select('users.id');
-            }])
-                ->withCount('trainees')
-                ->whereNotNull('trainer_id')
-                ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
-                ->orderBy('start')
-                ->get();
-
-            //return response()->json($trainings);
-        }
-
-        else
-        {
-            $currentDate = Carbon::now();
-            $startOfWeek = $currentDate->addWeeks((int)$week)->startOfWeek()->startOfDay()->toDateTimeString();
-            $endOfWeek = $currentDate->endOfWeek()->endOfDay()->toDateTimeString();
-
-            $trainings = Training::whereBetween('start', [$startOfWeek, $endOfWeek])
-                ->with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
-                    $query->select('users.id');
-                }])
-                ->withCount('trainees')
-                ->whereNotNull('trainer_id')
-                ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
-                ->orderBy('start')
-                ->get();
-        }
-
-        //return response()->json($trainings);
+        $trainings = $this->trainingRepository->getTrainingsByWeek($request);
+//        return response()->json($trainings);
+//
+//        $week = $request->query('week');
+//        Log::info($week);
+//
+//
+//
+//        if ($week == null)
+//        {
+//            $trainings = Training::with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
+//                $query->select('users.id');
+//            }])
+//                ->withCount('trainees')
+//                ->whereNotNull('trainer_id')
+//                ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
+//                ->orderBy('start')
+//                ->get();
+//
+//            //return response()->json($trainings);
+//        }
+//
+//        else
+//        {
+//            $currentDate = Carbon::now();
+//            $startOfWeek = $currentDate->addWeeks((int)$week)->startOfWeek()->startOfDay()->toDateTimeString();
+//            $endOfWeek = $currentDate->endOfWeek()->endOfDay()->toDateTimeString();
+//
+//            $trainings = Training::whereBetween('start', [$startOfWeek, $endOfWeek])
+//                ->with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
+//                    $query->select('users.id');
+//                }])
+//                ->withCount('trainees')
+//                ->whereNotNull('trainer_id')
+//                ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
+//                ->orderBy('start')
+//                ->get();
+//        }
+//
+//        return response()->json($trainings);
 
         return view('trainings.index', ['trainings' => $trainings]);
     }
