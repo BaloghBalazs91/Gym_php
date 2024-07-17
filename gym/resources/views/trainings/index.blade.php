@@ -8,6 +8,15 @@
             <div class="col d-flex justify-content-between align-content-start">
                 <h1>Trainings</h1>
                 <a href="/trainings/create" class="btn btn-primary">New</a>
+                <h2>{{explode("-", str_replace(" ", "-", $period['start']))[1]}}.{{explode("-", str_replace(" ", "-", $period['start']))[2]}}
+                    -
+                    {{explode("-", str_replace(" ", "-", $period['end']))[1]}}.{{explode("-", str_replace(" ", "-", $period['end']))[2]}}</h2>
+                <div>
+                @if($week !== 0)
+                <a href="/trainings?week={{$week - 1}}" class="btn btn-primary"><</a>
+                @endif
+                <a href="/trainings?week={{$week + 1}}" class="btn btn-primary">></a>
+                </div>
             </div>
         </div>
     </div>

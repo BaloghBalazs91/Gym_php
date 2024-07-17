@@ -39,7 +39,7 @@
                         <a class="nav-link" href="/training-methods">Training methods</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/trainings">Trainings</a>
+                        <a class="nav-link" href="/trainings?week=0">Trainings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/trainers">Trainers</a>

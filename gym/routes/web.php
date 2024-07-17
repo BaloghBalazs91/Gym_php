@@ -49,7 +49,7 @@ Route::controller(TrainingMethodController::class)->group(function () {
 
 // Trainings
 Route::controller(TrainingController::class)->group(function () {
-    Route::get('/trainings', 'index')->name('training-list');
+    Route::get('/trainings', 'indexByWeek')->name('training-list');
     Route::get('/trainings/create', 'create');
     Route::get('/trainings/{training}',  'show');
     Route::post('/trainings',  'store');
