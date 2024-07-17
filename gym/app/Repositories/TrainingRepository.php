@@ -12,6 +12,22 @@ class TrainingRepository
 {
     public function __construct(protected WeekCalculator $weekCalculator)
     {}
+
+    public function getAll()
+    {
+        $trainings = Training::with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
+            $query->select('users.id');
+        }])
+            ->withCount('trainees')
+            ->whereNotNull('trainer_id')
+            ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
+            ->orderBy('start')
+            ->get();
+
+        return $trainings;
+    }
+
+
     public function getTrainingsByWeek(Request $request) {
         $week = $request->query('week');
         Log::info($week);
@@ -38,6 +54,7 @@ class TrainingRepository
 
             $period = $this->weekCalculator->calculateWeek((int)$week);
 
+
             $trainings = Training::whereBetween('start', $period)
                 ->with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
                     $query->select('users.id');
@@ -49,6 +66,6 @@ class TrainingRepository
                 ->get();
         }
 
-        return $trainings;
+        return [$trainings, $period];
     }
 }

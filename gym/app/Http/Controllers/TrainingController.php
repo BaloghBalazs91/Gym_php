@@ -21,51 +21,13 @@ class TrainingController extends Controller
     public function __construct(protected TrainingRepository $trainingRepository)
     {}
 
-    public function index(Request $request)
+    public function indexByWeek(Request $request)
     {
-        $trainings = $this->trainingRepository->getTrainingsByWeek($request);
-//        return response()->json($trainings);
-//
-//        $week = $request->query('week');
-//        Log::info($week);
-//
-//
-//
-//        if ($week == null)
-//        {
-//            $trainings = Training::with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
-//                $query->select('users.id');
-//            }])
-//                ->withCount('trainees')
-//                ->whereNotNull('trainer_id')
-//                ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
-//                ->orderBy('start')
-//                ->get();
-//
-//            //return response()->json($trainings);
-//        }
-//
-//        else
-//        {
-//            $currentDate = Carbon::now();
-//            $startOfWeek = $currentDate->addWeeks((int)$week)->startOfWeek()->startOfDay()->toDateTimeString();
-//            $endOfWeek = $currentDate->endOfWeek()->endOfDay()->toDateTimeString();
-//
-//            $trainings = Training::whereBetween('start', [$startOfWeek, $endOfWeek])
-//                ->with(['trainingMethod', 'trainer', 'trainees' => function ($query) {
-//                    $query->select('users.id');
-//                }])
-//                ->withCount('trainees')
-//                ->whereNotNull('trainer_id')
-//                ->where('start', '>=', Carbon::now()->setTimezone('GMT+2'))
-//                ->orderBy('start')
-//                ->get();
-//        }
-//
-//        return response()->json($trainings);
-
-        return view('trainings.index', ['trainings' => $trainings]);
+        [$trainings, $period] = $this->trainingRepository->getTrainingsByWeek($request);
+        return view('trainings.index', ['trainings' => $trainings, 'week' => (int)$request->query('week'), 'period' => $period ]);
     }
+
+
 
     public function create()
     {

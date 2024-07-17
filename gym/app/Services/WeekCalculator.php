@@ -10,6 +10,7 @@ class WeekCalculator
         $currentDate = Carbon::now();
         $startOfWeek = $currentDate->addWeeks((int)$weekFromNow)->startOfWeek()->startOfDay()->toDateTimeString();
         $endOfWeek = $currentDate->endOfWeek()->endOfDay()->toDateTimeString();
-        return [$startOfWeek, $endOfWeek];
+        //var_dump("start: ", $startOfWeek, "end: ", $endOfWeek);
+        return ['start' => $startOfWeek, 'end' => $endOfWeek];
     }
 }
